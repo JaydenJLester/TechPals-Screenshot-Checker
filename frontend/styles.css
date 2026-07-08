@@ -195,6 +195,10 @@ textarea:focus {
     gap: 12px;
 }
 
+.primary-button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
 .primary-button,
 .secondary-button {
     border: none;

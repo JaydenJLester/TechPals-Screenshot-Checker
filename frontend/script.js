@@ -14,8 +14,7 @@ const checkBtn = document.getElementById("checkBtn");
 const resetBtn = document.getElementById("resetBtn");
 
 const resultCard = document.getElementById("resultCard");
-const selectedQuestionText = document.getElementById("selectedQuestionText");
-const followUpText = document.getElementById("followUpText");
+const resultContent = document.getElementById("resultContent");
 
 const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 const maxFileSize = 5 * 1024 * 1024;
@@ -67,7 +66,7 @@ questionInputs.forEach(function (input) {
     });
 });
 
-checkBtn.addEventListener("click", function () {
+checkBtn.addEventListener("click", async function () {
     hideError();
     resultCard.classList.add("hidden");
 
@@ -83,18 +82,37 @@ checkBtn.addEventListener("click", function () {
         return;
     }
 
-    selectedQuestionText.textContent = `You selected: ${getQuestionLabel(selectedQuestion.value)}`;
+    try {
+        setLoading(true);
 
-    if (followUpQuestion.value.trim()) {
-        followUpText.textContent = `Your note: ${followUpQuestion.value.trim()}`;
-        followUpText.classList.remove("hidden");
-    } else {
-        followUpText.textContent = "";
-        followUpText.classList.add("hidden");
+        const base64Image = await fileToBase64(selectedFile);
+
+        const response = await fetch("http://localhost:3001/api/analyze", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                imageBase64: base64Image,
+                mimeType: selectedFile.type,
+                questionType: selectedQuestion.value,
+                followUpQuestion: followUpQuestion.value.trim(),
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Something went wrong.");
+        }
+
+        showResult(data.result);
+    } catch (error) {
+        console.error(error);
+        showError("Something went wrong while checking the screenshot. Please try again.");
+    } finally {
+        setLoading(false);
     }
-
-    resultCard.classList.remove("hidden");
-    resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 resetBtn.addEventListener("click", function () {
@@ -109,6 +127,7 @@ resetBtn.addEventListener("click", function () {
 
     hideError();
     resultCard.classList.add("hidden");
+    resultContent.innerHTML = "";
 });
 
 function resetImage() {
@@ -130,10 +149,47 @@ function hideError() {
     errorMessage.classList.add("hidden");
 }
 
-function getQuestionLabel(value) {
-    if (value === "meaning") return "What does this mean?";
-    if (value === "safety") return "Is this safe?";
-    if (value === "action") return "Should I do anything with this?";
-    if (value === "other") return "Other";
-    return "Unknown";
+function setLoading(isLoading) {
+    if (isLoading) {
+        checkBtn.disabled = true;
+        checkBtn.textContent = "Checking Screenshot...";
+    } else {
+        checkBtn.disabled = false;
+        checkBtn.textContent = "Check Screenshot";
+    }
+}
+
+function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const result = reader.result;
+            const base64 = result.split(",")[1];
+            resolve(base64);
+        };
+
+        reader.onerror = function () {
+            reject(new Error("Could not read image file."));
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function showResult(resultText) {
+    resultContent.innerHTML = formatResponse(resultText);
+    resultCard.classList.remove("hidden");
+    resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function formatResponse(text) {
+    return text
+        .replace(/MAIN ANSWER:/g, "<h2>MAIN ANSWER:</h2>")
+        .replace(/WHAT I NOTICE:/g, "<h3>WHAT I NOTICE:</h3>")
+        .replace(/POTENTIAL DANGERS:/g, "<h3>POTENTIAL DANGERS:</h3>")
+        .replace(/RECOMMENDED ACTION:/g, "<h3>RECOMMENDED ACTION:</h3>")
+        .replace(/INFORMATION NEEDED FOR A STRONGER ANSWER:/g, "<h3>INFORMATION NEEDED FOR A STRONGER ANSWER:</h3>")
+        .replace(/\n- /g, "<br>• ")
+        .replace(/\n/g, "<br>");
 }

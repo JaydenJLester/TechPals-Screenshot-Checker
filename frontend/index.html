@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Screenshot Checker</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
     <main class="page-container">
@@ -118,49 +118,14 @@
             </div>
         </section>
 
-        <section id="resultCard" class="result-card hidden">
-            <div class="main-answer">
-                <p class="eyebrow">Prototype Response</p>
-                <h2>⚠️ Main Answer: Unclear</h2>
-                <p>
-                    This is a placeholder response. Next, we will connect this page to logic
-                    that analyzes the uploaded screenshot.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h3>What I Notice</h3>
-                <ul>
-                    <li>The upload and question selection are working.</li>
-                    <li id="selectedQuestionText"></li>
-                    <li id="followUpText"></li>
-                </ul>
-            </div>
-
-            <div class="result-section">
-                <h3>Potential Dangers</h3>
-                <p>
-                    Once analysis is connected, this section will explain possible risks such as
-                    fake links, password theft, payment scams, or suspicious attachments.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h3>Recommended Action</h3>
-                <p>
-                    For now, do not use this prototype to make real safety decisions. This is only
-                    testing the upload and response layout.
-                </p>
-            </div>
-
-            <div class="result-section">
-                <h3>Information Needed for a Stronger Answer</h3>
-                <p>
-                    Later, this section will list missing details, such as the full sender email,
-                    full link, or a clearer screenshot.
-                </p>
-            </div>
-        </section>
+    <section id="resultCard" class="result-card hidden">
+    <div class="main-answer">
+        <p class="eyebrow">Screenshot Checker Response</p>
+        <div id="resultContent">
+            <!-- AI response will appear here -->
+        </div>
+    </div>
+    </section>
 
         <section class="help-card">
             <h2>Helpful Tips</h2>
