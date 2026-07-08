@@ -1,4 +1,187 @@
-<h1> AI Screenshot Checker <h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Screenshot Checker</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <main class="page-container">
+        <section class="hero-card">
+            <p class="eyebrow">TechPals Prototype</p>
+            <h1>AI Screenshot Checker</h1>
+            <p class="intro-text">
+                Upload a screenshot of a text, email, pop-up, link, or confusing message.
+                We’ll help explain what it means, whether it seems safe, and what you should do next.
+            </p>
+        </section>
 
+        <section class="form-card">
+            <div class="form-section">
+                <h2>1. Upload your screenshot</h2>
+                <p>
+                    Upload one screenshot at a time. Use a clear image that shows the full message,
+                    sender, link, or button when possible.
+                </p>
 
+                <label for="screenshotUpload" class="upload-box">
+                    <span class="upload-title">Choose Screenshot</span>
+                    <span class="upload-subtitle">PNG, JPG, JPEG, or WEBP under 5 MB</span>
+                </label>
 
+                <input
+                    type="file"
+                    id="screenshotUpload"
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                    hidden
+                />
+
+                <div id="previewArea" class="preview-area hidden">
+                    <div class="preview-header">
+                        <div>
+                            <p id="fileName" class="file-name"></p>
+                            <p id="fileSize" class="file-size"></p>
+                        </div>
+
+                        <button id="deleteImageBtn" class="secondary-button" type="button">
+                            Delete image
+                        </button>
+                    </div>
+
+                    <img id="imagePreview" class="image-preview" alt="Uploaded screenshot preview" />
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. What would you like help with?</h2>
+                <p>
+                    Choose one option. You can add a short note if there is something specific
+                    you are worried about.
+                </p>
+
+                <div class="question-options">
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="meaning" />
+                        <div>
+                            <strong>What does this mean?</strong>
+                            <span>Explain the message in simple language.</span>
+                        </div>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="safety" />
+                        <div>
+                            <strong>Is this safe?</strong>
+                            <span>Check whether it looks suspicious or risky.</span>
+                        </div>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="action" />
+                        <div>
+                            <strong>Should I do anything with this?</strong>
+                            <span>Tell me what steps I should take next.</span>
+                        </div>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="other" />
+                        <div>
+                            <strong>Other</strong>
+                            <span>I have a different question about this screenshot.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="followUpArea" class="follow-up-area hidden">
+                    <label for="followUpQuestion">
+                        Optional: What are you worried about?
+                    </label>
+                    <textarea
+                        id="followUpQuestion"
+                        placeholder="Example: I am worried this is asking me to click a fake link."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error-message hidden"></div>
+
+            <div class="button-row">
+                <button id="checkBtn" class="primary-button" type="button">
+                    Check Screenshot
+                </button>
+
+                <button id="resetBtn" class="secondary-button" type="button">
+                    Start Over
+                </button>
+            </div>
+        </section>
+
+        <section id="resultCard" class="result-card hidden">
+            <div class="main-answer">
+                <p class="eyebrow">Prototype Response</p>
+                <h2>⚠️ Main Answer: Unclear</h2>
+                <p>
+                    This is a placeholder response. Next, we will connect this page to logic
+                    that analyzes the uploaded screenshot.
+                </p>
+            </div>
+
+            <div class="result-section">
+                <h3>What I Notice</h3>
+                <ul>
+                    <li>The upload and question selection are working.</li>
+                    <li id="selectedQuestionText"></li>
+                    <li id="followUpText"></li>
+                </ul>
+            </div>
+
+            <div class="result-section">
+                <h3>Potential Dangers</h3>
+                <p>
+                    Once analysis is connected, this section will explain possible risks such as
+                    fake links, password theft, payment scams, or suspicious attachments.
+                </p>
+            </div>
+
+            <div class="result-section">
+                <h3>Recommended Action</h3>
+                <p>
+                    For now, do not use this prototype to make real safety decisions. This is only
+                    testing the upload and response layout.
+                </p>
+            </div>
+
+            <div class="result-section">
+                <h3>Information Needed for a Stronger Answer</h3>
+                <p>
+                    Later, this section will list missing details, such as the full sender email,
+                    full link, or a clearer screenshot.
+                </p>
+            </div>
+        </section>
+
+        <section class="help-card">
+            <h2>Helpful Tips</h2>
+
+            <h3>Good screenshots include:</h3>
+            <ul>
+                <li>The full message, email, pop-up, or notification.</li>
+                <li>The sender name or email address, if visible.</li>
+                <li>Any links, buttons, warnings, or instructions.</li>
+                <li>Clear text that is not too blurry or cut off.</li>
+            </ul>
+
+            <h3>Try not to upload:</h3>
+            <ul>
+                <li>Images that are too blurry to read.</li>
+                <li>Screenshots with most of the message cut off.</li>
+                <li>Multiple screenshots at once.</li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
