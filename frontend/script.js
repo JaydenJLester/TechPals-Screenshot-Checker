@@ -20,6 +20,7 @@ const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 const maxFileSize = 5 * 1024 * 1024;
 
 let selectedFile = null;
+let previewUrl = null;
 
 screenshotUpload.addEventListener("change", function () {
     hideError();
@@ -48,7 +49,11 @@ screenshotUpload.addEventListener("change", function () {
     fileName.textContent = file.name;
     fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
 
-    const previewUrl = URL.createObjectURL(file);
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+    }
+
+    previewUrl = URL.createObjectURL(file);
     imagePreview.src = previewUrl;
 
     previewArea.classList.remove("hidden");
@@ -72,13 +77,13 @@ checkBtn.addEventListener("click", async function () {
 
     const selectedQuestion = document.querySelector("input[name='questionType']:checked");
 
-    if (!selectedFile) {
-        showError("Please upload a screenshot first.");
+    if (!selectedQuestion) {
+        showError("Please choose what you want help with first.");
         return;
     }
 
-    if (!selectedQuestion) {
-        showError("Please choose what you want help with.");
+    if (!selectedFile) {
+        showError("Please upload a screenshot.");
         return;
     }
 
@@ -132,6 +137,11 @@ resetBtn.addEventListener("click", function () {
 
 function resetImage() {
     selectedFile = null;
+
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        previewUrl = null;
+    }
     screenshotUpload.value = "";
     imagePreview.src = "";
     fileName.textContent = "";

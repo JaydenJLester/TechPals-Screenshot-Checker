@@ -8,26 +8,83 @@
 </head>
 <body>
     <main class="page-container">
-        <section class="hero-card">
-            <p class="eyebrow">TechPals Prototype</p>
-            <h1>AI Screenshot Checker</h1>
-            <p class="intro-text">
-                Upload a screenshot of a text, email, pop-up, link, or confusing message.
-                We’ll help explain what it means, whether it seems safe, and what you should do next.
-            </p>
-        </section>
-
-        <section class="form-card">
-            <div class="form-section">
-                <h2>1. Upload your screenshot</h2>
-                <p>
-                    Upload one screenshot at a time. Use a clear image that shows the full message,
-                    sender, link, or button when possible.
+        <section class="main-card" aria-labelledby="pageTitle">
+            <header class="page-header">
+                <p class="eyebrow">TechPals Prototype</p>
+                <h1 id="pageTitle">AI Screenshot Checker</h1>
+                <p class="intro-text">
+                    Upload a screenshot of a text, email, pop-up, link, or confusing message.
+                    We’ll explain what it means, whether it seems safe, and what you should do next.
                 </p>
+            </header>
+
+            <div class="form-section question-section">
+                <div class="section-heading">
+                    <span class="step-number" aria-hidden="true">1</span>
+                    <div>
+                        <h2>What would you like help with?</h2>
+                        <p>Choose the option that best matches your concern.</p>
+                    </div>
+                </div>
+
+                <div class="question-options">
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="meaning" />
+                        <span class="question-copy">
+                            <strong>What does this mean?</strong>
+                            <span>Explain the message in simple language.</span>
+                        </span>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="safety" />
+                        <span class="question-copy">
+                            <strong>Is this safe?</strong>
+                            <span>Check whether it looks suspicious or risky.</span>
+                        </span>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="action" />
+                        <span class="question-copy">
+                            <strong>What should I do?</strong>
+                            <span>Tell me what steps I should take next.</span>
+                        </span>
+                    </label>
+
+                    <label class="question-card">
+                        <input type="radio" name="questionType" value="other" />
+                        <span class="question-copy">
+                            <strong>Something else</strong>
+                            <span>Ask a different question about the screenshot.</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div id="followUpArea" class="follow-up-area hidden">
+                    <label for="followUpQuestion">Optional: Tell us what is worrying you</label>
+                    <textarea
+                        id="followUpQuestion"
+                        placeholder="Example: I am worried this link may be fake."
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="form-section upload-section">
+                <div class="section-heading">
+                    <span class="step-number" aria-hidden="true">2</span>
+                    <div>
+                        <h2>Upload a screenshot</h2>
+                        <p>Use one clear image that shows the full message, sender, link, or button.</p>
+                    </div>
+                </div>
 
                 <label for="screenshotUpload" class="upload-box">
-                    <span class="upload-title">Choose Screenshot</span>
-                    <span class="upload-subtitle">PNG, JPG, JPEG, or WEBP under 5 MB</span>
+                    <span class="upload-icon" aria-hidden="true">↑</span>
+                    <span>
+                        <span class="upload-title">Choose Screenshot</span>
+                        <span class="upload-subtitle">PNG, JPG, JPEG, or WEBP under 5 MB</span>
+                    </span>
                 </label>
 
                 <input
@@ -44,7 +101,7 @@
                             <p id="fileSize" class="file-size"></p>
                         </div>
 
-                        <button id="deleteImageBtn" class="secondary-button" type="button">
+                        <button id="deleteImageBtn" class="secondary-button compact-button" type="button">
                             Delete image
                         </button>
                     </div>
@@ -53,59 +110,7 @@
                 </div>
             </div>
 
-            <div class="form-section">
-                <h2>2. What would you like help with?</h2>
-                <p>
-                    Choose one option. You can add a short note if there is something specific
-                    you are worried about.
-                </p>
-
-                <div class="question-options">
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="meaning" />
-                        <div>
-                            <strong>What does this mean?</strong>
-                            <span>Explain the message in simple language.</span>
-                        </div>
-                    </label>
-
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="safety" />
-                        <div>
-                            <strong>Is this safe?</strong>
-                            <span>Check whether it looks suspicious or risky.</span>
-                        </div>
-                    </label>
-
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="action" />
-                        <div>
-                            <strong>Should I do anything with this?</strong>
-                            <span>Tell me what steps I should take next.</span>
-                        </div>
-                    </label>
-
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="other" />
-                        <div>
-                            <strong>Other</strong>
-                            <span>I have a different question about this screenshot.</span>
-                        </div>
-                    </label>
-                </div>
-
-                <div id="followUpArea" class="follow-up-area hidden">
-                    <label for="followUpQuestion">
-                        Optional: What are you worried about?
-                    </label>
-                    <textarea
-                        id="followUpQuestion"
-                        placeholder="Example: I am worried this is asking me to click a fake link."
-                    ></textarea>
-                </div>
-            </div>
-
-            <div id="errorMessage" class="error-message hidden"></div>
+            <div id="errorMessage" class="error-message hidden" role="alert"></div>
 
             <div class="button-row">
                 <button id="checkBtn" class="primary-button" type="button">
@@ -116,34 +121,45 @@
                     Start Over
                 </button>
             </div>
+
+            <aside class="practices-card" aria-labelledby="practicesTitle">
+                <div class="section-heading compact-heading">
+                    <span class="step-number" aria-hidden="true">3</span>
+                    <div>
+                        <h2 id="practicesTitle">Good screenshot practices</h2>
+                        <p>A complete, readable screenshot gives the checker better information.</p>
+                    </div>
+                </div>
+
+                <div class="practice-columns">
+                    <div>
+                        <h3>Include</h3>
+                        <ul>
+                            <li>The full message or pop-up</li>
+                            <li>The sender name or email address</li>
+                            <li>Visible links, buttons, and warnings</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3>Avoid</h3>
+                        <ul>
+                            <li>Blurry or cut-off text</li>
+                            <li>Several screenshots in one image</li>
+                            <li>Unrelated personal information</li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </section>
 
-    <section id="resultCard" class="result-card hidden">
-    <div class="main-answer">
-        <p class="eyebrow">Screenshot Checker Response</p>
-        <div id="resultContent">
-            <!-- AI response will appear here -->
-        </div>
-    </div>
-    </section>
-
-        <section class="help-card">
-            <h2>Helpful Tips</h2>
-
-            <h3>Good screenshots include:</h3>
-            <ul>
-                <li>The full message, email, pop-up, or notification.</li>
-                <li>The sender name or email address, if visible.</li>
-                <li>Any links, buttons, warnings, or instructions.</li>
-                <li>Clear text that is not too blurry or cut off.</li>
-            </ul>
-
-            <h3>Try not to upload:</h3>
-            <ul>
-                <li>Images that are too blurry to read.</li>
-                <li>Screenshots with most of the message cut off.</li>
-                <li>Multiple screenshots at once.</li>
-            </ul>
+        <section id="resultCard" class="result-card hidden" aria-live="polite">
+            <div class="main-answer">
+                <p class="eyebrow">Screenshot Checker Response</p>
+                <div id="resultContent">
+                    <!-- AI response will appear here -->
+                </div>
+            </div>
         </section>
     </main>
 
