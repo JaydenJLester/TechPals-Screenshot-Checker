@@ -3,111 +3,88 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Screenshot Checker</title>
+    <title>Screenshot Checker</title>
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
     <main class="page-container">
         <section class="main-card" aria-labelledby="pageTitle">
             <header class="page-header">
-                <p class="eyebrow">TechPals Prototype</p>
-                <h1 id="pageTitle">AI Screenshot Checker</h1>
-                <p class="intro-text">
-                    Upload a screenshot of a text, email, pop-up, link, or confusing message.
-                    We’ll explain what it means, whether it seems safe, and what you should do next.
-                </p>
+                <h1 id="pageTitle">Screenshot Checker</h1>
             </header>
 
-            <div class="form-section question-section">
-                <div class="section-heading">
-                    <span class="step-number" aria-hidden="true">1</span>
-                    <div>
-                        <h2>What would you like help with?</h2>
-                        <p>Choose the option that best matches your concern.</p>
-                    </div>
-                </div>
+            <div class="checker-grid">
+                <section class="form-panel upload-panel" aria-labelledby="uploadTitle">
+                    <h2 id="uploadTitle">Upload Screenshot</h2>
 
-                <div class="question-options">
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="meaning" />
-                        <span class="question-copy">
-                            <strong>What does this mean?</strong>
-                            <span>Explain the message in simple language.</span>
+                    <label for="screenshotUpload" class="upload-box">
+                        <span class="upload-icon" aria-hidden="true">↑</span>
+                        <span class="upload-copy">
+                            <span class="upload-title">Choose Screenshot</span>
+                            <span class="upload-subtitle">PNG, JPG, JPEG, or WEBP under 5 MB</span>
                         </span>
                     </label>
 
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="safety" />
-                        <span class="question-copy">
-                            <strong>Is this safe?</strong>
-                            <span>Check whether it looks suspicious or risky.</span>
-                        </span>
-                    </label>
+                    <input
+                        type="file"
+                        id="screenshotUpload"
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        hidden
+                    />
 
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="action" />
-                        <span class="question-copy">
-                            <strong>What should I do?</strong>
-                            <span>Tell me what steps I should take next.</span>
-                        </span>
-                    </label>
+                    <div id="previewArea" class="preview-area hidden">
+                        <div class="preview-header">
+                            <div class="file-details">
+                                <p id="fileName" class="file-name"></p>
+                                <p id="fileSize" class="file-size"></p>
+                            </div>
 
-                    <label class="question-card">
-                        <input type="radio" name="questionType" value="other" />
-                        <span class="question-copy">
-                            <strong>Something else</strong>
-                            <span>Ask a different question about the screenshot.</span>
-                        </span>
-                    </label>
-                </div>
-
-                <div id="followUpArea" class="follow-up-area hidden">
-                    <label for="followUpQuestion">Optional: Tell us what is worrying you</label>
-                    <textarea
-                        id="followUpQuestion"
-                        placeholder="Example: I am worried this link may be fake."
-                    ></textarea>
-                </div>
-            </div>
-
-            <div class="form-section upload-section">
-                <div class="section-heading">
-                    <span class="step-number" aria-hidden="true">2</span>
-                    <div>
-                        <h2>Upload a screenshot</h2>
-                        <p>Use one clear image that shows the full message, sender, link, or button.</p>
-                    </div>
-                </div>
-
-                <label for="screenshotUpload" class="upload-box">
-                    <span class="upload-icon" aria-hidden="true">↑</span>
-                    <span>
-                        <span class="upload-title">Choose Screenshot</span>
-                        <span class="upload-subtitle">PNG, JPG, JPEG, or WEBP under 5 MB</span>
-                    </span>
-                </label>
-
-                <input
-                    type="file"
-                    id="screenshotUpload"
-                    accept="image/png, image/jpeg, image/jpg, image/webp"
-                    hidden
-                />
-
-                <div id="previewArea" class="preview-area hidden">
-                    <div class="preview-header">
-                        <div>
-                            <p id="fileName" class="file-name"></p>
-                            <p id="fileSize" class="file-size"></p>
+                            <button id="deleteImageBtn" class="secondary-button compact-button" type="button">
+                                Delete image
+                            </button>
                         </div>
 
-                        <button id="deleteImageBtn" class="secondary-button compact-button" type="button">
-                            Delete image
-                        </button>
+                        <img id="imagePreview" class="image-preview" alt="Uploaded screenshot preview" />
+                    </div>
+                </section>
+
+                <section id="questionPanel" class="form-panel question-panel" aria-labelledby="questionTitle">
+                    <div class="question-heading">
+                        <h2 id="questionTitle">What would you like help with?</h2>
+                        <p>(Optional)</p>
                     </div>
 
-                    <img id="imagePreview" class="image-preview" alt="Uploaded screenshot preview" />
-                </div>
+                    <div class="question-options">
+                        <label class="question-card">
+                            <input type="radio" name="questionType" value="meaning" />
+                            <span>What does this mean?</span>
+                        </label>
+
+                        <label class="question-card">
+                            <input type="radio" name="questionType" value="safety" />
+                            <span>Is this safe?</span>
+                        </label>
+
+                        <label class="question-card">
+                            <input type="radio" name="questionType" value="action" />
+                            <span>What should I do?</span>
+                        </label>
+
+                        <label class="question-card">
+                            <input type="radio" name="questionType" value="other" />
+                            <span>Something else</span>
+                        </label>
+                    </div>
+
+                    <div id="followUpArea" class="follow-up-area hidden">
+                        <label for="followUpQuestion">Tell us what is worrying you</label>
+                        <textarea
+                            id="followUpQuestion"
+                            rows="3"
+                            placeholder="Example: I’m worried this link might be fake."
+                        ></textarea>
+                    </div>
+                </section>
             </div>
 
             <div id="errorMessage" class="error-message hidden" role="alert"></div>
@@ -116,41 +93,7 @@
                 <button id="checkBtn" class="primary-button" type="button">
                     Check Screenshot
                 </button>
-
-                <button id="resetBtn" class="secondary-button" type="button">
-                    Start Over
-                </button>
             </div>
-
-            <aside class="practices-card" aria-labelledby="practicesTitle">
-                <div class="section-heading compact-heading">
-                    <span class="step-number" aria-hidden="true">3</span>
-                    <div>
-                        <h2 id="practicesTitle">Good screenshot practices</h2>
-                        <p>A complete, readable screenshot gives the checker better information.</p>
-                    </div>
-                </div>
-
-                <div class="practice-columns">
-                    <div>
-                        <h3>Include</h3>
-                        <ul>
-                            <li>The full message or pop-up</li>
-                            <li>The sender name or email address</li>
-                            <li>Visible links, buttons, and warnings</li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3>Avoid</h3>
-                        <ul>
-                            <li>Blurry or cut-off text</li>
-                            <li>Several screenshots in one image</li>
-                            <li>Unrelated personal information</li>
-                        </ul>
-                    </div>
-                </div>
-            </aside>
         </section>
 
         <section id="resultCard" class="result-card hidden" aria-live="polite">

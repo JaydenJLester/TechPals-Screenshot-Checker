@@ -65,8 +65,16 @@ deleteImageBtn.addEventListener("click", function () {
 });
 
 questionInputs.forEach(function (input) {
-    input.addEventListener("change", function () {
-        followUpArea.classList.remove("hidden");
+     input.addEventListener("change", function () {
+        const showFollowUp = input.value === "other" && input.checked;
+
+        followUpArea.classList.toggle("hidden", !showFollowUp);
+        questionPanel.classList.toggle("has-follow-up", showFollowUp);
+
+        if (!showFollowUp) {
+            followUpQuestion.value = "";
+        }
+
         resultCard.classList.add("hidden");
     });
 });
