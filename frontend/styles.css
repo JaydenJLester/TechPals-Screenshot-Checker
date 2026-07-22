@@ -78,6 +78,13 @@ p {
     transition: 0.2s ease;
 }
 
+.upload-box.drag-active {
+    background: #dbeafe;
+    border-color: #1d4ed8;
+    transform: scale(1.01);
+}
+
+
 .upload-box:hover {
     background: #eff6ff;
     border-color: #2563eb;
