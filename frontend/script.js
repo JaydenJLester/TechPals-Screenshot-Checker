@@ -1,3 +1,4 @@
+const uploadBox = document.getElementById("uploadBox");
 const screenshotUpload = document.getElementById("screenshotUpload");
 const previewArea = document.getElementById("previewArea");
 const imagePreview = document.getElementById("imagePreview");
@@ -18,10 +19,14 @@ const resultCard = document.getElementById("resultCard");
 const resultContent = document.getElementById("resultContent");
 
 const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
-const maxFileSize = 5 * 1024 * 1024;
+const maxFileSize = 5 * 1024 * 1024; // 5 MB
 
 let selectedFile = null;
 let previewUrl = null;
+
+/*
+    FILE UPLOAD THROUGH BUTTON
+*/
 
 screenshotUpload.addEventListener("change", function () {
     hideError();
@@ -33,6 +38,50 @@ screenshotUpload.addEventListener("change", function () {
         return;
     }
 
+    handleSelectedFile(file);
+});
+
+/*
+    FILE UPLOAD THROUGH DRAG AND DROP
+*/
+
+uploadBox.addEventListener("dragover", function (event) {
+    event.preventDefault();
+    uploadBox.classList.add("drag-active");
+});
+
+uploadBox.addEventListener("dragleave", function () {
+    uploadBox.classList.remove("drag-active");
+});
+
+uploadBox.addEventListener("drop", function (event) {
+    event.preventDefault();
+    uploadBox.classList.remove("drag-active");
+
+    hideError();
+    resultCard.classList.add("hidden");
+
+    const files = event.dataTransfer.files;
+
+    if (!files || files.length === 0) {
+        return;
+    }
+
+    if (files.length > 1) {
+        showError("Please upload only one screenshot at a time.");
+        return;
+    }
+
+    const file = files[0];
+
+    handleSelectedFile(file);
+});
+
+/*
+    SHARED FILE VALIDATION
+*/
+
+function handleSelectedFile(file) {
     if (!allowedTypes.includes(file.type)) {
         showError("Please upload a PNG, JPG, JPEG, or WEBP image.");
         resetImage();
@@ -57,7 +106,11 @@ screenshotUpload.addEventListener("change", function () {
     imagePreview.src = previewUrl;
 
     previewArea.classList.remove("hidden");
-});
+}
+
+/*
+    DELETE IMAGE
+*/
 
 deleteImageBtn.addEventListener("click", function () {
     resetImage();
@@ -81,6 +134,9 @@ function setFollowUpState(isEnabled) {
         followUpQuestion.value = "";
     }
 }
+/*
+    QUESTION SELECTION
+*/
 
 questionInputs.forEach(function (input) {
     input.addEventListener("change", function () {
@@ -91,6 +147,9 @@ questionInputs.forEach(function (input) {
 });
 
 setFollowUpState(false);
+/*
+    SUBMIT TO BACKEND
+*/
 
 checkBtn.addEventListener("click", async function () {
     hideError();
@@ -131,8 +190,8 @@ checkBtn.addEventListener("click", async function () {
 
         showResult(data.result);
     } catch (error) {
-        console.error(error);
-        showError("Something went wrong while checking the screenshot. Please try again.");
+        console.error("Frontend error:", error);
+        showError(error.message || "Something went wrong while checking the screenshot. Please try again.");
     } finally {
         setLoading(false);
     }
@@ -153,6 +212,10 @@ if (resetBtn) {
         resultContent.innerHTML = "";
     });
 }
+
+/*
+    HELPER FUNCTIONS
+*/
 
 function resetImage() {
     selectedFile = null;
@@ -215,6 +278,7 @@ function showResult(resultText) {
 
 function formatResponse(text) {
     return text
+        .replace(/TLDR:/g, "<h2 class='tldr-heading'>TLDR:</h2>")
         .replace(/MAIN ANSWER:/g, "<h2>MAIN ANSWER:</h2>")
         .replace(/WHAT I NOTICE:/g, "<h3>WHAT I NOTICE:</h3>")
         .replace(/POTENTIAL DANGERS:/g, "<h3>POTENTIAL DANGERS:</h3>")
