@@ -6,6 +6,7 @@ const fileSize = document.getElementById("fileSize");
 const deleteImageBtn = document.getElementById("deleteImageBtn");
 
 const questionInputs = document.querySelectorAll("input[name='questionType']");
+const questionPanel = document.getElementById("questionPanel");
 const followUpArea = document.getElementById("followUpArea");
 const followUpQuestion = document.getElementById("followUpQuestion");
 
@@ -45,7 +46,6 @@ screenshotUpload.addEventListener("change", function () {
     }
 
     selectedFile = file;
-
     fileName.textContent = file.name;
     fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
 
@@ -64,31 +64,39 @@ deleteImageBtn.addEventListener("click", function () {
     resultCard.classList.add("hidden");
 });
 
+function setFollowUpState(isEnabled) {
+    followUpArea.classList.toggle("is-disabled", !isEnabled);
+    questionPanel.classList.toggle("has-follow-up", isEnabled);
+
+    followUpQuestion.disabled = !isEnabled;
+    followUpQuestion.readOnly = !isEnabled;
+    followUpQuestion.tabIndex = isEnabled ? 0 : -1;
+    followUpQuestion.setAttribute("aria-disabled", String(!isEnabled));
+    followUpQuestion.setAttribute("aria-expanded", String(isEnabled));
+    followUpQuestion.placeholder = isEnabled
+        ? "Example: I am worried this link may be fake."
+        : "Select the 'Something else' button to add details.";
+
+    if (!isEnabled) {
+        followUpQuestion.value = "";
+    }
+}
+
 questionInputs.forEach(function (input) {
-     input.addEventListener("change", function () {
+    input.addEventListener("change", function () {
         const showFollowUp = input.value === "other" && input.checked;
-
-        followUpArea.classList.toggle("hidden", !showFollowUp);
-        questionPanel.classList.toggle("has-follow-up", showFollowUp);
-
-        if (!showFollowUp) {
-            followUpQuestion.value = "";
-        }
-
+        setFollowUpState(showFollowUp);
         resultCard.classList.add("hidden");
     });
 });
+
+setFollowUpState(false);
 
 checkBtn.addEventListener("click", async function () {
     hideError();
     resultCard.classList.add("hidden");
 
     const selectedQuestion = document.querySelector("input[name='questionType']:checked");
-
-    if (!selectedQuestion) {
-        showError("Please choose what you want help with first.");
-        return;
-    }
 
     if (!selectedFile) {
         showError("Please upload a screenshot.");
@@ -99,6 +107,8 @@ checkBtn.addEventListener("click", async function () {
         setLoading(true);
 
         const base64Image = await fileToBase64(selectedFile);
+        const questionType = selectedQuestion ? selectedQuestion.value : "general";
+        const shouldSendFollowUp = questionType === "other";
 
         const response = await fetch("http://localhost:3001/api/analyze", {
             method: "POST",
@@ -108,8 +118,8 @@ checkBtn.addEventListener("click", async function () {
             body: JSON.stringify({
                 imageBase64: base64Image,
                 mimeType: selectedFile.type,
-                questionType: selectedQuestion.value,
-                followUpQuestion: followUpQuestion.value.trim(),
+                questionType,
+                followUpQuestion: shouldSendFollowUp ? followUpQuestion.value.trim() : "",
             }),
         });
 
@@ -128,20 +138,21 @@ checkBtn.addEventListener("click", async function () {
     }
 });
 
-resetBtn.addEventListener("click", function () {
-    resetImage();
+if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+        resetImage();
 
-    questionInputs.forEach(function (input) {
-        input.checked = false;
+        questionInputs.forEach(function (input) {
+            input.checked = false;
+        });
+
+        setFollowUpState(false);
+
+        hideError();
+        resultCard.classList.add("hidden");
+        resultContent.innerHTML = "";
     });
-
-    followUpQuestion.value = "";
-    followUpArea.classList.add("hidden");
-
-    hideError();
-    resultCard.classList.add("hidden");
-    resultContent.innerHTML = "";
-});
+}
 
 function resetImage() {
     selectedFile = null;
@@ -150,6 +161,7 @@ function resetImage() {
         URL.revokeObjectURL(previewUrl);
         previewUrl = null;
     }
+
     screenshotUpload.value = "";
     imagePreview.src = "";
     fileName.textContent = "";

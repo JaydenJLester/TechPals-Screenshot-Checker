@@ -76,12 +76,17 @@
                         </label>
                     </div>
 
-                    <div id="followUpArea" class="follow-up-area hidden">
-                        <label for="followUpQuestion">Tell us what is worrying you</label>
+                    <div id="followUpArea" class="follow-up-area is-disabled">
+                        <label for="followUpQuestion">Tell us what’s worrying you</label>
                         <textarea
                             id="followUpQuestion"
-                            rows="3"
-                            placeholder="Example: I’m worried this link might be fake."
+                            rows="1"
+                            placeholder="Select Something else button to add details."
+                            aria-expanded="false"
+                            aria-disabled="true"
+                            tabindex="-1"
+                            readonly
+                            disabled
                         ></textarea>
                     </div>
                 </section>
