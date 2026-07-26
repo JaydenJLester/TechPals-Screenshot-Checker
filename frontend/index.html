@@ -101,14 +101,28 @@
             </div>
         </section>
 
-        <section id="resultCard" class="result-card hidden" aria-live="polite">
-            <div class="main-answer">
-                <p class="eyebrow">Screenshot Checker Response</p>
-                <div id="resultContent">
-                    <!-- AI response will appear here -->
+    <!-- remove 'hidden' from class resultcard to show-->
+        <section id="resultCard" class="result-card hidden" aria-live="polite" aria-label="Screenshot checker results">
+            <section class="result-short-panel" aria-labelledby="shortAnswerTitle">
+                <h2 id="shortAnswerTitle">Short Answer</h2>
+                <div id="shortAnswerContent" class="result-short-content">
+                    Short answer will appear here.
                 </div>
-            </div>
+            </section>
+
+            <section class="result-long-panel" aria-labelledby="longAnswerTitle">
+                <h3 id="longAnswerTitle">Long answer:</h3>
+                <div id="longAnswerContent" class="result-long-content">
+                    The rest of the response will appear here.
+                </div>
+            </section>
+
+            <section class="result-links-panel" aria-labelledby="linksTitle">
+                <h3 id="linksTitle">Links:</h3>
+                <div id="linksContent" class="result-links-content"></div>
+            </section>
         </section>
+
     </main>
 
     <script src="script.js"></script>

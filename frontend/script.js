@@ -208,9 +208,15 @@ function fileToBase64(file) {
 }
 
 function showResult(resultText) {
-    resultContent.innerHTML = formatResponse(resultText);
+    const sections = splitResult(resultText)
+
+    shortAnswerContent.innerHTML = formatResponse(sections.shortAnswer);
+    longAnswerContent.innerHTML = formatResponse(sections.longAnswer);
+    linksContent.innerHTML = "";
+
     resultCard.classList.remove("hidden");
-    resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    resultCard.scrollIntoView({behavior: "smooth", block: "start",});
 }
 
 function formatResponse(text) {
